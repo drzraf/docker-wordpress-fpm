@@ -1,7 +1,7 @@
 FROM wordpress:php5.6-fpm-alpine
 LABEL maintainer "Raphaël Droz <raphael.droz@gmail.com>"
 
-RUN apk add --no-cache git unzip subversion jq libxslt wget make mysql-client less bash su-exec
+RUN apk add --no-cache git unzip subversion jq libxslt libxml-xpath-perl wget make mysql-client less bash su-exec
 
 ENV WP_CLI_VERSION 1.3.0
 ENV COMPOSER_VERSION 1.5.1
