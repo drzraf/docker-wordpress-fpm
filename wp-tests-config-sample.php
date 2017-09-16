@@ -1,7 +1,7 @@
 <?php
 
 /* Path to the WordPress codebase you'd like to test. Add a forward slash in the end. */
-define( 'ABSPATH', getenv( 'WP_CORE_DIR' ) );
+define( 'ABSPATH', getenv( 'WP_CORE_DIR' ) . '/' );
 
 /*
  * Path to the theme to test with.

@@ -24,14 +24,14 @@ RUN    curl -sSLo /usr/local/bin/composer https://github.com/composer/composer/r
 
 # RUN mkdir "$WP_CORE_DIR" && curl -s https://wordpress.org/latest.tar.gz | tar --strip-components=1 -C "$WP_CORE_DIR" -zxm
 RUN ln -s /usr/src/wordpress "$WP_CORE_DIR" \
-    && svn co --quiet https://develop.svn.wordpress.org/trunk/tests/phpunit/ $WP_TESTS_DIR/
+    && svn co --quiet https://develop.svn.wordpress.org/trunk/tests/phpunit/ $WP_TESTS_DIR
 
 ADD 00-wp-reinstall-if-needed.sh /usr/local/bin/wordpress-reinstall-if-needed
 ADD 05-wp-provision.sh /usr/local/bin/wordpress-provision
 RUN chmod +x /usr/local/bin/*
 
 # From: https://develop.svn.wordpress.org/trunk/wp-tests-config-sample.php
-COPY wp-tests-config-sample.php $WP_TESTS_DIR/
+COPY wp-tests-config-sample.php $WP_TESTS_DIR/wp-tests-config.php
 COPY wp-config.php /usr/src/wordpress/
 
 CMD wordpress-reinstall-if-needed.sh && wordpress-provision && exec php-fpm
