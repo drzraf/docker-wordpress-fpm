@@ -10,7 +10,7 @@ ENV PHPUNIT5_VERSION 5.7.9
 ENV PHPUNIT6_VERSION 6.3.0
 ENV WP_CORE_DIR /tmp/wordpress
 ENV WP_TESTS_DIR /tmp/wordpress-tests-lib
-
+ENV XDEBUG_VERSION 2.5.5
 
 # composer/behat/phpunit/phpcs part
 RUN    curl -sSLo /usr/local/bin/composer https://github.com/composer/composer/releases/download/${COMPOSER_VERSION}/composer.phar \
@@ -21,6 +21,14 @@ RUN    curl -sSLo /usr/local/bin/composer https://github.com/composer/composer/r
     && chmod 755 /usr/local/bin/phpunit5 \
     && curl -sSLo /usr/local/bin/phpunit6 https://phar.phpunit.de/phpunit-${PHPUNIT6_VERSION}.phar \
     && chmod 755 /usr/local/bin/phpunit6
+
+RUN apk add --no-cache autoconf musl-dev gcc && \
+    pecl install xdebug-${XDEBUG_VERSION} && \
+    docker-php-ext-enable xdebug && \
+    apk del autoconf musl-dev gcc && \
+    rm -rf /var/cache/apk/* && \
+    echo "zend_extension=/usr/local/lib/php/extensions/no-debug-non-zts-20131226/xdebug.so" > /usr/local/etc/php/conf.d/xdebug.ini
+
 
 # RUN mkdir "$WP_CORE_DIR" && curl -s https://wordpress.org/latest.tar.gz | tar --strip-components=1 -C "$WP_CORE_DIR" -zxm
 RUN ln -s /usr/src/wordpress "$WP_CORE_DIR" \
