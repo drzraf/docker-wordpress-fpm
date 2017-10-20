@@ -42,4 +42,4 @@ RUN chmod +x /usr/local/bin/*
 COPY wp-tests-config-sample.php $WP_TESTS_DIR/wp-tests-config.php
 COPY wp-config.php /usr/src/wordpress/
 
-CMD wordpress-reinstall-if-needed.sh && wordpress-provision && exec php-fpm
+CMD wordpress-reinstall-if-needed && wordpress-provision && exec php-fpm
