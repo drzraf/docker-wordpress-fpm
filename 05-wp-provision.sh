@@ -53,8 +53,12 @@ if [[ -n "$WP_PLUGINS" ]]; then
     wp plugin activate $WP_PLUGINS
 fi
 
+# Initialize ~/.wp-cli/packages directory
+wp package update
+
 if [[ -n "$WP_SCRIPT" ]]; then
     bash <<<"$WP_SCRIPT"
+    exit $?
 fi
 
 exit 0

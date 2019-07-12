@@ -30,6 +30,7 @@ RUN mkdir -p "${WP_CORE_DIR:-/var/www/wordpress}" \
     && curl -sL "https://github.com/wp-premium/gravityforms/archive/${VERSION:-2.4.10}.tar.gz" | tar --strip-components=1 -C "$DIR_GF" -zxf - \
     && rm -rf /var/cache/apk/*
 
+RUN apk add --no-cache php7-zip
 RUN sed -i -e '/include.*modules/ienv WP_BACKEND_HOSTNAME;' /etc/nginx/nginx.conf && mkdir -p /run/nginx
 
 COPY php-fpm.conf /etc/php7/php-fpm.d/zz-docker.conf
