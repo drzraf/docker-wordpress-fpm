@@ -3,18 +3,10 @@
 # see
 # https://github.com/wp-cli/scaffold-command/blob/master/templates/install-wp-tests.sh
 
-[[ -n "$VERBOSE" ]] && set -vx
-
-# GitLab.com workaround for
-# https://gitlab.com/gitlab-org/gitlab-runner/issues/1042#note_61788095
-if [[ -n "$CI_PROJECT_DIR" ]]; then
-    while ! ping -c 1 "$DB_HOST"; do
-	if [[ -e "$CI_PROJECT_DIR/hosts" ]]; then
-	    cat "$CI_PROJECT_DIR/hosts" > /etc/hosts
-	    break;
-	fi
-	sleep 1
-    done
+if [[ -n "$VERBOSE" ]]; then
+    set -vx
+    # exec 1> >(tee /tmp/log /dev/stdout);
+    # exec 2> >(tee /tmp/log /dev/stderr)
 fi
 
 while ! mysqladmin --host="$DB_HOST" ping; do
@@ -39,7 +31,7 @@ let ret=0
 if ! wp core is-installed && [[ -n $ADMIN_USER && -n $ADMIN_PASS && -n $ADMIN_EMAIL ]]; then
     echo >&2 "Installing WordPress..."
     cd "${WP_CORE_DIR:-/var/www/wordpress}"
-    sync # see: https://github.com/docker/docker/issues/9547
+    # sync # see: https://github.com/docker/docker/issues/9547
     wp core install \
        --title="${SITE_TITLE:-dockerwp}" \
        --admin_user=${ADMIN_USER} \
@@ -47,15 +39,14 @@ if ! wp core is-installed && [[ -n $ADMIN_USER && -n $ADMIN_PASS && -n $ADMIN_EM
        --admin_email=${ADMIN_EMAIL} \
        --url=${WP_HOME} \
        --skip-email
-    ret=$?
+   ret=$?
 fi
-
 
 # If this image is used as a service in GitLab CI then we have a no way to
 # finely tweak provisioning. We already provide WP_SCRIPTS
 # But let's be bold and bind an open socket to a root-shell so
 # that the main container run whatever it wants to using:
-# apk add socat && socat - TCP:phpfpm:9666 <<<hostname
+# socat - TCP:phpfpm:9666 <<<hostname
 #
 # GitlLab `wait-for-service` wait for EXPOSEd port to be available before
 # starting running main image scripts.

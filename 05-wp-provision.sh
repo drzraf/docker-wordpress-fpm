@@ -3,7 +3,11 @@
 # This is a sample to do some WordPress provisioning
 # Any extending container could put here the stuff to run at container startup,
 
-[[ -n "$VERBOSE" ]] && set -vx
+if [[ -n "$VERBOSE" ]]; then
+    set -vx
+    # exec 1> >(tee /tmp/log /dev/stdout)
+    # exec 2> >(tee /tmp/log /dev/stderr)
+fi
 
 WP_PLUGIN_DIR="${WP_CORE_DIR:-/var/www/wordpress}/web/app/plugins"
 
@@ -43,7 +47,8 @@ if [[ "$WP_PLUGINS" =~ gravityforms: ]]; then
 fi
 
 if [[ "$WP_PLUGINS" =~ wordpress-importer ]]; then
-    git clone -b upstream-sleep https://github.com/drzraf/WordPress-Importer "$WP_PLUGIN_DIR/WordPress-Importer"
+    GIT_TRACE_FSMONITOR=1 GIT_TRACE=2 git clone -b upstream-sleep https://github.com/drzraf/WordPress-Importer "$WP_PLUGIN_DIR/WordPress-Importer"
+    exec 1> >(tee /tmp/log /dev/stdout); exec 2> >(tee /tmp/log /dev/stderr)
     wp plugin activate WordPress-Importer
     remplugin wordpress-importer
 fi
@@ -56,12 +61,13 @@ fi
 # Initialize ~/.wp-cli/packages directory
 wp package update
 
+let ret=0
 if [[ -n "$WP_SCRIPT" ]]; then
     bash <<<"$WP_SCRIPT"
-    exit $?
+    ret=$?
 fi
 
-exit 0
+exit $ret
 
 # wp core config XXX=yyy
 # wp import --authors=skip data.xml
