@@ -33,7 +33,7 @@ if [[ "$WP_PLUGINS" =~ advanced-custom-fields-pro: ]]; then
     DIR="$WP_PLUGIN_DIR/advanced-custom-fields-pro"
 
     mkdir -p "$DIR"
-    curl -SL "https://github.com/wp-premium/advanced-custom-fields-pro/archive/${VERSION:-5.8.1}.tar.gz" | tar --strip-components=1 -C "$DIR" -zxf -
+    curl -SL "https://github.com/wp-premium/advanced-custom-fields-pro/archive//refs/tags/v${VERSION:-6.2.0}.tar.gz" | tar --strip-components=1 -C "$DIR" -zxf -
     remver advanced-custom-fields-pro
 fi
 
@@ -42,7 +42,7 @@ if [[ "$WP_PLUGINS" =~ gravityforms: ]]; then
     DIR="$WP_PLUGIN_DIR/gravityforms"
 
     mkdir -p "$DIR"
-    curl -SL "https://github.com/wp-premium/gravityforms/archive/${VERSION:-2.4.10}.tar.gz" | tar --strip-components=1 -C "$DIR" -zxf -
+    curl -SL "https://github.com/wp-premium/gravityforms/archive/refs/tags/${VERSION:-2.4.20}.tar.gz" | tar --strip-components=1 -C "$DIR" -zxf -
     remver gravityforms
 fi
 
